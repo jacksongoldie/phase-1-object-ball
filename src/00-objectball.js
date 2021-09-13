@@ -140,7 +140,7 @@ function shoesize(name){
 
 //teamColors, takes team name and returns color array
 function teamColors(teamNameString){
-    debugger;
+    //debugger;
     if(gameObject().home.teamName !== teamNameString){
         return gameObject().away.colors;
     }
@@ -156,34 +156,77 @@ function teamNames(){
     return arrayOfTeamNames;
 }
 
-//playerNames - takes in team name and returns an array of jersey number's for that team
+/*/playerNames - takes in team name and returns an array of jersey number's for that team
 function playerNumbers (teamName){
     //home team iterate?
     if(teamName === gameObject().home.teamName){
     //return home team jersey number array
     let objectOfHomeTeamPlayerStats = {};
-    objectOfHomeTeamPlayerStats = gameObject().home.players;
+    objectOfHomeTeamPlayerStats = {...gameObject().home.players};
     
     console.log(objectOfHomeTeamPlayerStats);
     //for in to iterate over players and return jersey numbers 
     //LEFT OFF HERE - NEED X BELOW TO RETURN THE NAME AS A KEY AND THE STATS??
     for(const x in objectOfHomeTeamPlayerStats){
-        console.log(x);
-        debugger;
-        let arrayOfHomeTeamJerseys = [];
-        arrayOfHomeTeamJerseys += [x].number;
-        //array iteration now?? use for each
-        // MAYBE gameObject().home.players[x].number;
-        return arrayOfHomeTeamJerseys;
+        //SHALLOW OBJECT COPY AND CAN'T GET NUMBER??
+        const arrayOfHomeTeamJerseys = [];
+        arrayOfHomeTeamJerseys = [...arrayOfHomeTeamJerseys, (objectOfHomeTeamPlayerStats[x].number)]  
+        console.log(arrayOfHomeTeamJerseys)
+        //debugger;
+        // let arrayOfHomeTeamJerseys = [];
+        arrayOfHomeTeamJerseys += [objectOfHomeTeamPlayerStats][x].number; 
     }
     }
     else{
         console.log("else");
     }
-}
+    return arrayOfHomeTeamJerseys;
+}*/
 
 //playerStats - takes in player name and returns object of stats
+function playerStats (playerName){
+    const fullObjectOfPlayers = {...gameObject().home.players, ...gameObject().away.players}
+    return fullObjectOfPlayers[playerName];
+}
+
+//playerNames - takes in team name and returns an array of jersey number's for that team
+function playerNumbersRevisited(teamName){
+    const homeObjectOfPlayers = {...gameObject().home.players};
+    const awayObjectOfPlayers = {...gameObject().away.players};
+    const arrayOfTeamJerseys = [];
+    if (teamName === gameObject().home.teamName){
+        for(const name in homeObjectOfPlayers){
+            //debugger;
+            arrayOfTeamJerseys.push(homeObjectOfPlayers[name]['number']);
+        }
+    }
+    else {
+        for(const name in awayObjectOfPlayers){
+            //debugger;
+            arrayOfTeamJerseys.push(awayObjectOfPlayers[name]['number']);
+        }
+    }
+    return arrayOfTeamJerseys;
+}
 
 //bigShoeRebounds - return number of rebounds associated w/ player with the largest shoe size;
 //find the player w the largest shoe size
 //return player's rebound number
+function bigShoeRebounds(){
+    //debugger;
+    const fullObjectOfPlayers = {...gameObject().home.players, ...gameObject().away.players};
+    //gameobject>away and home>players //players>shoe
+    // look at each value indivually and keep the largest, then keep looping, return largest key and value
+    let biggestShoeSize = 0;
+    for(const name in fullObjectOfPlayers) {
+        if (fullObjectOfPlayers[name].shoe > biggestShoeSize){
+            biggestShoeSize = fullObjectOfPlayers[name].shoe;
+            //console.log(biggestShoeSize);
+        }  
+    };
+    for(const name in fullObjectOfPlayers){
+        if(biggestShoeSize === fullObjectOfPlayers[name].shoe){
+          return fullObjectOfPlayers[name].rebounds;
+         }
+    }
+};
